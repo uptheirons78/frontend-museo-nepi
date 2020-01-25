@@ -1,9 +1,9 @@
-import React from "react"
-import { Link, graphql } from "gatsby"
-import Img from "gatsby-image"
+import React from "react";
+import { Link, graphql } from "gatsby";
+import Img from "gatsby-image";
 
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Layout from "../components/layout";
+import SEO from "../components/seo";
 
 const IndexPage = ({ data }) => (
   <Layout>
@@ -12,7 +12,7 @@ const IndexPage = ({ data }) => (
       {data.allStrapiPost.edges.map(post => (
         <li key={post.node.id}>
           <h2>
-            <Link to={`/${post.node.id}`}>{post.node.title}</Link>
+            <Link to={`/articoli/${post.node.slug}`}>{post.node.title}</Link>
           </h2>
           <p>{post.node.content.slice(0, 220)} ...</p>
           <Img
@@ -23,9 +23,9 @@ const IndexPage = ({ data }) => (
       ))}
     </ul>
   </Layout>
-)
+);
 
-export default IndexPage
+export default IndexPage;
 
 export const pageQuery = graphql`
   query indexQuery {
@@ -34,6 +34,7 @@ export const pageQuery = graphql`
         node {
           id
           title
+          slug
           content
           image {
             childImageSharp {
@@ -46,4 +47,4 @@ export const pageQuery = graphql`
       }
     }
   }
-`
+`;
