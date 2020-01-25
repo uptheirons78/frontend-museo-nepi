@@ -2,19 +2,20 @@ import React from "react";
 import { Link, graphql } from "gatsby";
 import Img from "gatsby-image";
 import Layout from "../components/layout";
+import SEO from "../components/seo";
+import ReactMarkdown from "react-markdown";
 
 const postTemplate = ({ data }) => {
+  const { title, content, image, author } = data.strapiPost;
   return (
     <Layout>
-      <h1>{data.strapiPost.title}</h1>
+      <SEO title={title} />
+      <Img fluid={image.childImageSharp.fluid} />
+      <h1>{title}</h1>
       <p>
-        by{" "}
-        <Link to={`/authors/User_${data.strapiPost.author.id}`}>
-          {data.strapiPost.author.username}
-        </Link>
+        by <Link to={`/authors/User_${author.id}`}>{author.username}</Link>
       </p>
-      <Img fixed={data.strapiPost.image.childImageSharp.fixed} />
-      <p>{data.strapiPost.content}</p>
+      <ReactMarkdown source={content} />
     </Layout>
   );
 };
@@ -28,8 +29,8 @@ export const query = graphql`
       content
       image {
         childImageSharp {
-          fixed(width: 200, height: 125) {
-            ...GatsbyImageSharpFixed
+          fluid(maxWidth: 960, maxHeight: 300) {
+            ...GatsbyImageSharpFluid
           }
         }
       }

@@ -18,7 +18,7 @@ const makeRequest = (graphql, request) =>
 // data layer is bootstrapped to let plugins create pages from data.
 exports.createPages = ({ actions, graphql }) => {
   const { createPage } = actions;
-
+  // Get Posts and create pages
   const getPosts = makeRequest(
     graphql,
     `
@@ -45,6 +45,33 @@ exports.createPages = ({ actions, graphql }) => {
     });
   });
 
+  // Get Authors and create pages
+  const getAuthors = makeRequest(
+    graphql,
+    `
+    {
+      allStrapiUser {
+        edges {
+          node {
+            id
+          }
+        }
+      }
+    }
+    `
+  ).then(result => {
+    // Create pages for each user.
+    result.data.allStrapiUser.edges.forEach(({ node }) => {
+      createPage({
+        path: `/authors/${node.id}`,
+        component: path.resolve(`src/templates/authorTemplate.js`),
+        context: {
+          id: node.id,
+        },
+      });
+    });
+  });
+
   // Query for posts nodes to use in creating pages.
-  return getPosts;
+  return Promise.all([getPosts, getAuthors]);
 };
